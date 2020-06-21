@@ -47,6 +47,7 @@ def accept(server):
                     B = B - Bx
                     print("Stop send the video data, this time: ", time.time(), '------value_B: ', B)
                 elif 'Exit' in flag:
+                    i = 0
                     types = 0
                     r.close()
                     print('data_link end, exit')
@@ -75,6 +76,7 @@ def accept(server):
                 r.send('none'.encode())
                 print('Pause')
         elif types == 0:
+            time.sleep(1)
             pass
 
 if __name__ == '__main__':
