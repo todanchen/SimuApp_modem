@@ -18,7 +18,7 @@ def accept(server):
     rlist = [server]
     wlist = []
     xlist = []
-    type = 0
+    types = 0
     i = 0
     while True:
         rs, ws, xs = select(rlist, wlist, xlist)
@@ -31,37 +31,42 @@ def accept(server):
                 try:
                     flag = r.recv(1024).decode()
                 except:
-                    r.close()
                     pass
 
                 if not flag:
                     pass
                 elif 'initial' in flag:
-                    type = 1
+                    types = 1
                 elif 'request' in flag:
-                    type = 2
+                    types = 2
                 elif 'stop' in flag:
-                    type = 3
+                    types = 3
                     pause_start = time.time()
                     Bx = (B - 12)
                     sleeptime = Bx*8
                     B = B - Bx
                     print("Stop send the video data, this time: ", time.time(), '------value_B: ', B)
-        if type == 1:
+                elif 'Exit' in flag:
+                    types = 0
+                    r.close()
+                    print('data_link end, exit')
+                    rlist.remove(r)
+                    
+        if types == 1:
             date_rate = int(flag.split(',')[1])
             vdata = bytes(date_rate*8*5)
             mdata = vdata + 'start'.encode()
             B = 5
             r.send(mdata)
             print('Initial the video, this time: ', time.time(), '------value_B: ', B)
-        elif type == 2:
+        elif types == 2:
             date_rate = int(flag.split(',')[1])
             vdata = bytes(date_rate * 8)
             mdata = vdata + 'end'.encode()
             B += 1
             r.send(mdata)
             print('Send the next video clice, this time: ', time.time(), '------value_B: ', B)
-        elif type == 3:
+        elif types == 3:
             pause_time = time.time() - pause_start
             if pause_time >= sleeptime:
                 r.send('exit'.encode())
@@ -69,6 +74,8 @@ def accept(server):
             else:
                 r.send('none'.encode())
                 print('Pause')
+        elif types == 0:
+            pass
 
 if __name__ == '__main__':
     main()
