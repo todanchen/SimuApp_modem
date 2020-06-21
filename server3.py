@@ -46,6 +46,7 @@ def accept(server):
                     Bx = (B - 12)
                     sleeptime = Bx*8
                     B = B - Bx
+                    print("Stop send the video data, this time: ", time.time(), '------value_B: ', B)
         if type == 1:
             date_rate = int(flag.split(',')[1])
             vdata = bytes(date_rate*8*5)
@@ -61,8 +62,7 @@ def accept(server):
             r.send(mdata)
             print('Send the next video clice, this time: ', time.time(), '------value_B: ', B)
         elif type == 3:
-            print("Stop send the video data, this time: ", time.time(), '------value_B: ', B)
-            pause_time = time.time() - pasuse_start
+            pause_time = time.time() - pause_start
             if pause_time >= sleeptime:
                 r.send('exit'.encode())
                 print('Pause end.')
