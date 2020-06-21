@@ -68,6 +68,7 @@ def accept(server):
                 print('Pause end.')
             else:
                 r.send('none'.encode())
+                print('Pause')
 
 if __name__ == '__main__':
     main()
