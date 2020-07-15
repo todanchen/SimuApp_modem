@@ -35,31 +35,20 @@ def accept(server):
                         date_rate = int(flag[1])
                 except:
                     traceback.print_exc()
-                    pass
+                    break
 
                 if not flag:
                     r.close()
                     print('data_link end, exit')
                     rlist.remove(r)
-                elif 'initial' in flag:
-                    data = bytes(date_rate*25)
-                    B = 25
-                    try:
-                        r.send(data)
-                        time.sleep(0.15)
-                        signal = 'start'+',' + str(B) + ','
-                        r.send(signal.encode())
-                        print('start:', B)
-                    except:
-                        traceback.print_exc()
-                        pass
+
                 elif 'request' in flag:
                     time_slic = random.randint(3, 23)
                     data = bytes(date_rate*time_slic)
                     B += time_slic
                     try:
                         r.send(data)
-                        time.sleep(0.15)
+                        time.sleep(0.01)
                         signal = 'next' + ',' + str(time_slic) + ','
                         r.send(signal.encode())
                         print('next: ', B)
