@@ -88,10 +88,10 @@ def download():
                         lock.release()
                         # print('Now time: ', time.asctime(time.localtime(time.time())), ' Video_clip size: ', get_B, ' Buffer size: ', B)
                         #Determine whether the buffer has reached threshold
-                        if B > 30:
+                        if B > 25:
                             # print('Pause data transmit for: ', B-29, 's.')
-                            logging.info('Pause data transmit for: '+str(B-29)+'s.')
-                            time.sleep(B-29)
+                            logging.info('Pause data transmit for: '+str(B-25)+'s.')
+                            time.sleep(B-25)
                         # print("Next request")
                         logging.info("Next data clip request!"+"Now B_Value: " + str(B))
                         try:
