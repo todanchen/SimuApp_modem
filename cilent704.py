@@ -26,16 +26,17 @@ def download():
         wlist = []
         xlist = []
         conserver = False
-        client.settimeout(2)
+        client.settimeout(5)
         #connect the server
         try:
             client.connect(('124.160.127.162', 6543))
+            # client.connect(('127.0.0.1', 8001))
             conserver = True
             # print('Connect the video server!')
             logging.info("Connect the video server!")
         except OSError:
             # print('Not network!')
-            logging.error('Not network!')
+            logging.error('Not network!',traceback.format_exc())
             time.sleep(1)
         except:
             # traceback.print_exc()
@@ -88,10 +89,10 @@ def download():
                         lock.release()
                         # print('Now time: ', time.asctime(time.localtime(time.time())), ' Video_clip size: ', get_B, ' Buffer size: ', B)
                         #Determine whether the buffer has reached threshold
-                        if B > 25:
+                        if B > 30:
                             # print('Pause data transmit for: ', B-29, 's.')
-                            logging.info('Pause data transmit for: '+str(B-24)+'s.')
-                            time.sleep(B-24)
+                            logging.info('Pause data transmit for: '+str(B-29)+'s.')
+                            time.sleep(B-29)
                         # print("Next request")
                         logging.info("Next data clip request!")
                         r.settimeout(1)
@@ -143,7 +144,7 @@ def video_play():
                 B = 0
                 start_flag = False
                 # print('Pause Time: ', time.asctime(time.localtime(time.time())),  '. The videos need to load data!')
-                logging.warning("\033[31;40mThe videos need to load data!\033[0m")
+                logging.warning("\033[31;40mThe current video freezes and needs to load data!\033[0m")
             lock.release()
         else:
             # print('Not video data!')
@@ -154,7 +155,10 @@ def log():
     logger.setLevel(level=logging.INFO)
     formatter = logging.Formatter('%(asctime)s - %(filename)s[line:%(lineno)d] - %(threadName)s - %(levelname)s: %(message)s')
 
-    fileHandler = handlers.TimedRotatingFileHandler(filename='./log/video_test.log', when='H')
+    current_time = time.strftime("%Y%m%d%H%M%S", time.localtime())
+    log_file = './log/{}video_test.txt'.format(current_time)
+    # fileHandler = handlers.TimedRotatingFileHandler(filename=log_file, when='H')
+    fileHandler = handlers.RotatingFileHandler(filename=log_file)
     fileHandler.setLevel(logging.INFO)
     fileHandler.setFormatter(formatter)
 
@@ -169,7 +173,7 @@ def log():
 if __name__ == '__main__':
     log()
     #The data bit rate
-    date_rate = 1024*300
+    date_rate = 1024*1024*5
     #Buffer size
     B = 0
     #The video start playing flag
